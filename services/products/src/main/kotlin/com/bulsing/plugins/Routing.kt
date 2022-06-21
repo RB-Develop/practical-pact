@@ -1,6 +1,6 @@
 package com.bulsing.plugins
 
-import com.bulsing.routes.CustomerRoutes
+import com.bulsing.routes.ProductRoutes
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -11,6 +11,6 @@ fun Application.configureRouting() {
         get("/") {
             call.respondText("Hello World!")
         }
-        CustomerRoutes().apply { customerRouting() }
+        ProductRoutes().apply { customerRouting() }
     }
 }
