@@ -13,8 +13,6 @@ const provider = new Pact({
 });
 
 describe("API Pact test", () => {
-
-
     beforeAll(() => provider.setup());
     afterEach(() => provider.verify());
     afterAll(() => provider.finalize());
@@ -36,12 +34,12 @@ describe("API Pact test", () => {
                 willRespondWith: {
                     status: 200,
                     headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
+                        'Content-Type': 'application/json'
                     },
                     body: eachLike({
-                        id: "09",
-                        type: "CREDIT_CARD",
-                        name: "Gem Visa"
+                        id: "1",
+                        name: "Gem Visa",
+                        price: 10
                     }),
                 },
             });
@@ -52,72 +50,20 @@ describe("API Pact test", () => {
             const product = await api.getAllProducts();
 
             expect(product).toStrictEqual([
-                {"id": "09", "name": "Gem Visa", "type": "CREDIT_CARD"}
+                {"id": "1", "name": "Gem Visa", "price": 10}
             ]);
-        });
-
-        test("no products exists", async () => {
-
-            // set up Pact interactions
-            await provider.addInteraction({
-                state: 'no products exist',
-                uponReceiving: 'get all products',
-                withRequest: {
-                    method: 'GET',
-                    path: '/products',
-                    headers: {
-                        "Authorization": like("Bearer 2019-01-14T11:34:18.045Z")
-                    }
-                },
-                willRespondWith: {
-                    status: 200,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    },
-                    body: []
-                },
-            });
-
-            const api = new API(provider.mockService.baseUrl);
-
-            // make request to Pact mock server
-            const product = await api.getAllProducts();
-
-            expect(product).toStrictEqual([]);
-        });
-
-        test("no auth token", async () => {
-
-            // set up Pact interactions
-            await provider.addInteraction({
-                state: 'products exist',
-                uponReceiving: 'get all products with no auth token',
-                withRequest: {
-                    method: 'GET',
-                    path: '/products'
-                },
-                willRespondWith: {
-                    status: 401
-                },
-            });
-
-            const api = new API(provider.mockService.baseUrl);
-
-            // make request to Pact mock server
-            await expect(api.getAllProducts()).rejects.toThrow("Request failed with status code 401");
         });
     });
 
     describe("getting one product", () => {
         test("ID 10 exists", async () => {
-
             // set up Pact interactions
             await provider.addInteraction({
-                state: 'product with ID 10 exists',
-                uponReceiving: 'get product with ID 10',
+                state: 'product with name speaker exists',
+                uponReceiving: 'get product with name speaker',
                 withRequest: {
                     method: 'GET',
-                    path: '/products/10',
+                    path: '/products/speaker',
                     headers: {
                         "Authorization": like("Bearer 2019-01-14T11:34:18.045Z")
                     }
@@ -125,12 +71,12 @@ describe("API Pact test", () => {
                 willRespondWith: {
                     status: 200,
                     headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
+                        'Content-Type': 'application/json'
                     },
                     body: like({
-                        id: "10",
-                        type: "CREDIT_CARD",
-                        name: "28 Degrees"
+                        id: "1",
+                        name: "speaker",
+                        price: 200
                     }),
                 },
             });
@@ -138,12 +84,12 @@ describe("API Pact test", () => {
             const api = new API(provider.mockService.baseUrl);
 
             // make request to Pact mock server
-            const product = await api.getProduct("10");
+            const product = await api.getProduct("speaker");
 
             expect(product).toStrictEqual({
-                id: "10",
-                type: "CREDIT_CARD",
-                name: "28 Degrees"
+                id: "1",
+                name: "speaker",
+                price: 200
             });
         });
 
@@ -151,45 +97,24 @@ describe("API Pact test", () => {
 
             // set up Pact interactions
             await provider.addInteraction({
-                state: 'product with ID 11 does not exist',
-                uponReceiving: 'get product with ID 11',
+                state: 'product with name not-exists does not exist',
+                uponReceiving: 'get product with name not-exists',
                 withRequest: {
                     method: 'GET',
-                    path: '/products/11',
+                    path: '/products/not-exists',
                     headers: {
                         "Authorization": like("Bearer 2019-01-14T11:34:18.045Z")
                     }
                 },
                 willRespondWith: {
-                    status: 404
+                    status: 500
                 },
             });
 
             const api = new API(provider.mockService.baseUrl);
 
             // make request to Pact mock server
-            await expect(api.getProduct("11")).rejects.toThrow("Request failed with status code 404");
-        });
-
-        test("no auth token", async () => {
-
-            // set up Pact interactions
-            await provider.addInteraction({
-                state: 'product with ID 10 exists',
-                uponReceiving: 'get product by ID 10 with no auth token',
-                withRequest: {
-                    method: 'GET',
-                    path: '/products/10'
-                },
-                willRespondWith: {
-                    status: 401
-                },
-            });
-
-            const api = new API(provider.mockService.baseUrl);
-
-            // make request to Pact mock server
-            await expect(api.getProduct("10")).rejects.toThrow("Request failed with status code 401");
+            await expect(api.getProduct("not-exists")).rejects.toThrow("Request failed with status code 500");
         });
     });
 });

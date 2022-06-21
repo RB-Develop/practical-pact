@@ -53,6 +53,16 @@ class ProductPactProviderTest {
         context.verifyInteraction();
     }
 
+    @State("product with name speaker exists")
+    fun toProductSpeakerExists() {
+        // Already exists
+    }
+
+    @State("product with name not-exists does not exist")
+    fun toProductNotExistingState() {
+        // Configure the application for this state
+    }
+
     @State("products exist")
     fun toProductsExistState() {
 

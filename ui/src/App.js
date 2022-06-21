@@ -97,7 +97,6 @@ class App extends React.Component {
             return this.state.products.filter(p =>
                 p.id.toLowerCase().includes(search)
                 || p.name.toLowerCase().includes(search)
-                || p.type.toLowerCase().includes(search)
             )
         };
         this.setState((s) => {
