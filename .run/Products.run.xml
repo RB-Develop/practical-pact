@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Products" type="JetRunConfigurationType">
+    <option name="MAIN_CLASS_NAME" value="com.bulsing.ApplicationKt" />
+    <module name="com.bulsing.practical-pact.products.main" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -26,6 +26,7 @@ repositories {
 dependencies {
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("io.ktor:ktor-server-cors:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
@@ -63,9 +64,9 @@ tasks.test {
     useJUnitPlatform()
 
     if (System.getProperty("pactPublishResults") == "true") {
-        System.setProperty("pact.provider.version", getGitHash())
-        System.setProperty("pact.provider.tag", getGitBranch())
-        System.setProperty("pact.verifier.publishResults", "true")
+        systemProperty("pact.provider.version", getGitHash())
+        systemProperty("pact.provider.tag", getGitBranch())
+        systemProperty("pact.verifier.publishResults", "true")
     }
 }
 
