@@ -14,6 +14,7 @@ class SupplyService {
         supplyStorage.apply {
             add(Supply("orange", 20, 2))
             add(Supply("chair", 10, 50))
+            //add(Supply("couch", 10, 50))
         }
     }
 

@@ -78,4 +78,9 @@ pact {
         tags = listOf(getGitBranch(), "test", "prod")
         consumerVersion = getGitHash()
     }
+    broker {
+        pactBrokerUrl = "http://localhost:8000/"
+        pactBrokerUsername = System.getProperty("PACT_BROKER_USERNAME", "pact_workshop")
+        pactBrokerPassword = System.getProperty("PACT_BROKER_PASSWORD", "pact_workshop")
+    }
 }
