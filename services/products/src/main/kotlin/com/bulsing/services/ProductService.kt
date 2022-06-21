@@ -2,13 +2,15 @@ package com.bulsing.services
 
 import com.bulsing.models.Product
 import com.bulsing.models.productStorage
+import io.ktor.client.*
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 
 class ProductService(
-    private val externalService: ExternalService = ExternalService("http://localhost:9001")
+    private val httpClient: HttpClient,
+    private val externalService: ExternalService = ExternalService("http://localhost:9001", httpClient)
 ) {
     init {
         productStorage.apply {

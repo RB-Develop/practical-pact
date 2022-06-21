@@ -1,7 +1,6 @@
 package com.bulsing
 
 import au.com.dius.pact.consumer.MockServer
-import au.com.dius.pact.consumer.dsl.LambdaDsl.newJsonArrayMinLike
 import au.com.dius.pact.consumer.dsl.LambdaDslJsonArray
 import au.com.dius.pact.consumer.dsl.LambdaDslObject
 import au.com.dius.pact.consumer.dsl.PactBuilder
@@ -11,13 +10,16 @@ import au.com.dius.pact.consumer.junit5.PactTestFor
 import au.com.dius.pact.core.model.V4Pact
 import au.com.dius.pact.core.model.annotations.Pact
 import com.bulsing.services.ExternalService
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.testApplication
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.collections.HashMap
+import kotlin.collections.Map
+import kotlin.collections.set
 import kotlin.test.assertEquals
 
 
@@ -55,7 +57,11 @@ class ConsumerPactTest {
     @Test
     @PactTestFor(pactMethod = "getAllProducts")
     fun getAllProducts_whenProductsExist(mockServer: MockServer) = runBlocking {
-        val response = ExternalService(mockServer.getUrl()).getExternalSupply()
+        val response = ExternalService(mockServer.getUrl(), HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json()
+            }
+        }).getExternalSupply()
         assertEquals(2, response.supplies.size)
     }
 

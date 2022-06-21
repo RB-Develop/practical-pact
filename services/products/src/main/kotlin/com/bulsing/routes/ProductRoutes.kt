@@ -1,11 +1,12 @@
 package com.bulsing.routes
 
 import com.bulsing.services.ProductService
+import io.ktor.client.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
-class ProductRoutes {
-    private val productService = ProductService()
+class ProductRoutes(httpClient: HttpClient) {
+    private val productService = ProductService(httpClient)
 
     fun Route.customerRouting() {
         route("/products") {
